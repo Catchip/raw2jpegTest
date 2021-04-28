@@ -1,0 +1,17 @@
+[
+{
+  "directory": "/home/catchip/Documents/cplus/raw2jpeg_compasion/build",
+  "command": "/usr/bin/c++  -I/usr/include/opencv4 -g -o CMakeFiles/encoder.dir/encoders/TurboEncoder.cpp.o -c /home/catchip/Documents/cplus/raw2jpeg_compasion/encoders/TurboEncoder.cpp",
+  "file": "/home/catchip/Documents/cplus/raw2jpeg_compasion/encoders/TurboEncoder.cpp"
+},
+{
+  "directory": "/home/catchip/Documents/cplus/raw2jpeg_compasion/build",
+  "command": "/usr/bin/c++  -I/usr/include/opencv4 -g -o CMakeFiles/encoder.dir/encoders/opencvEncoder.cpp.o -c /home/catchip/Documents/cplus/raw2jpeg_compasion/encoders/opencvEncoder.cpp",
+  "file": "/home/catchip/Documents/cplus/raw2jpeg_compasion/encoders/opencvEncoder.cpp"
+},
+{
+  "directory": "/home/catchip/Documents/cplus/raw2jpeg_compasion/build/run",
+  "command": "/usr/bin/c++  -I/home/catchip/Documents/cplus/raw2jpeg_compasion/encoders -I/usr/include/opencv4 -g -o CMakeFiles/test.dir/test.cpp.o -c /home/catchip/Documents/cplus/raw2jpeg_compasion/run/test.cpp",
+  "file": "/home/catchip/Documents/cplus/raw2jpeg_compasion/run/test.cpp"
+}
+]
