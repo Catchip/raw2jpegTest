@@ -1,6 +1,7 @@
 #include "TurboEncoder.hpp"
 #include <turbojpeg.h>
 #include <jpeglib.h>
+#include <ctime>
 
 double TurboEncoder::encode(char *strImageName, std::uint8_t *image_buffer, int image_height, int image_width, int quality){
 	clock_t start,end;
@@ -9,21 +10,16 @@ double TurboEncoder::encode(char *strImageName, std::uint8_t *image_buffer, int 
     
     struct jpeg_error_mgr jerr;
     /* More stuff */
-    FILE * outfile;     /* target file */
     JSAMPROW row_pointer[1];    /* pointer to JSAMPLE row[s] */
     int row_stride;     /* physical row width in image buffer */
     
     cinfo.err = jpeg_std_error(&jerr);
     /* Now we can initialize the JPEG compression object. */
     jpeg_create_compress(&cinfo);
-
-   
-    if ((outfile = fopen(strImageName, "wb")) == NULL) {
-        fprintf(stderr, "can't open %s\n", strImageName);
-        //exit(1);
-        return -1;
-    }
-    jpeg_stdio_dest(&cinfo, outfile);
+	unsigned long size = 0;
+	unsigned char * buf = NULL;
+	jpeg_mem_dest(&cinfo,&buf,&size);
+    //jpeg_stdio_dest(&cinfo, outfile);
 
   
     cinfo.image_width = image_width;    /* image width and height, in pixels */
@@ -53,7 +49,6 @@ double TurboEncoder::encode(char *strImageName, std::uint8_t *image_buffer, int 
     /* Step 6: Finish compression */
     jpeg_finish_compress(&cinfo);
     /* After finish_compress, we can close the output file. */
-    fclose(outfile);
 
     /* Step 7: release JPEG compression object */
     /* This is an important step since it will release a good deal of memory. */

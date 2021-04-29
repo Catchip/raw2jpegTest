@@ -1,7 +1,6 @@
 #include "jpeg_encoder.hpp"
 #include "opencv2/core/hal/interface.h"
 #include "opencv2/core/utility.hpp"
-#include <bits/types/clock_t.h>
 #include <ctime>
 #include <encoder.hpp>
 #include <fstream>
@@ -14,11 +13,12 @@
 #include <opencv2/core.hpp>
 
 void RunTest(jpeg_encoder *encoder, char *encoderName, int testmode);
-double RunTestOnImage(jpeg_encoder *encoder, int img_num, int qua);
-double RunTestOnImages(jpeg_encoder *encoder, int qul);
+double RunTestOnImage(jpeg_encoder *encoder, int img_num, int qua, std::uint8_t* buffer, int h, int w);
+double RunTestOnImages(jpeg_encoder *encoder, int qul, std::uint8_t* buffer, int h, int w);
 
 int main(int argc, char *argv[]){
 	// read
+	/*
 	if(argc != 4){
 		std::cout << "argc error" << std::endl;
 		return 1;
@@ -43,7 +43,11 @@ int main(int argc, char *argv[]){
 		index = 1;
 	else if(strcmp(encoderName, "libjpeg") == 0)
 		index = 2;
-
+*/
+	int index = 1;
+	int loop = 1;
+	char * encoderName = "turbo";
+	int test = 2;
 	std::uint8_t * buffer;
 	std::vector<jpeg_encoder *> encoders;
 	encoders.push_back(new opencvEncoder());
@@ -58,46 +62,67 @@ int main(int argc, char *argv[]){
 void RunTest(jpeg_encoder* encoder, char *encoderName, int testmode){
 	if(testmode == 1){
 		clock_t start, end;
+		std::stringstream ss; ss<<"images/1.bmp";
+		//ss << "C:\\Users\\Administrator\\Desktop\\raw2jpegTest\\build\\x64-debug\\run\\images\\1.bmp";
+		cv::Mat img = cv::imread(ss.str().c_str(),cv::IMREAD_ANYCOLOR);
+		std::uint8_t * buffer;
+		if (img.isContinuous()) {
+			buffer = img.data;
+		}
+		else {
+			buffer = img.data;
+		}
 		std::string path = std::string(encoderName) + "_image";
 		std::ofstream ofs(path, std::ios::out|std::ios::binary|std::ios::trunc);
-		int img_num = 60;
+		int img_num = 12;
 		double second;
 		for(int i = 1 ; i < img_num ; ++i){
-			second = RunTestOnImage(encoder, i, 95);
-			ofs<<second<<std::endl;
+			second = encoder->encode("not", buffer, img.rows, img.cols, 70);
+			ofs<< second / CLOCKS_PER_SEC << std::endl;
+		}
+		for(int i = 1 ; i < img_num ; ++i){
+			second = encoder->encode("not", buffer, img.rows, img.cols, 60);
+			ofs<< second / CLOCKS_PER_SEC << std::endl;
+		}
+		for(int i = 1 ; i < img_num ; ++i){
+			second = encoder->encode("not", buffer, img.rows, img.cols, 10);
+			ofs<< second / CLOCKS_PER_SEC << std::endl;
 		}
 		ofs.close();
 	}
 	else{
+		std::stringstream ss; ss<<"images/1.bmp";
+		//ss << "C:\\Users\\Administrator\\Desktop\\raw2jpegTest\\build\\x64-debug\\run\\images\\1.bmp";
+		cv::Mat img = cv::imread(ss.str().c_str(),cv::IMREAD_ANYCOLOR);
+		std::uint8_t * buffer;
+		if (img.isContinuous()) {
+			buffer = img.data;
+		}
+		else {
+			buffer = img.data;
+		}
 		double time;
 		std::string path = std::string(encoderName) + "_quality";
 		std::ofstream ofs(path, std::ios::out | std::ios::binary |std::ios::trunc);
-		for(int qua = 10; qua<90 ; qua = qua + 1){
-			time = RunTestOnImages(encoder, qua);
-			ofs<<time<<std::endl;
+		for(int qua = 10; qua<=90 ; qua = qua + 1){
+			time = RunTestOnImages(encoder, qua, buffer, img.rows, img.cols);
+			ofs<<time<<",";
 		}
 	}
 
 }
 
-double RunTestOnImage(jpeg_encoder *encoder, int img_num, int qua){
-	std::stringstream ss;
-	ss<<"images/"<<img_num<<".jpg";
-
-	cv::Mat img = cv::imread(ss.str());
-	std::uint8_t * buffer = img.data;
-
-	double time = encoder->encode("temp.jpg", buffer,img.rows, img.cols, qua);
-
+double RunTestOnImage(jpeg_encoder *encoder, int img_num, int qua, uchar* buffer, int hight, int width){
+	double time = encoder->encode("temp.jpg", buffer, hight, width, qua);
 	return time/CLOCKS_PER_SEC;
 }
 
-double RunTestOnImages(jpeg_encoder *encoder, int qul){
+double RunTestOnImages(jpeg_encoder *encoder, int qul, uchar* buffer , int height, int width){
 	
-	int img_num = 60;
+	int img_num = 20;
 	double second = 0;
 	for(int i = 1 ; i < img_num ; ++i){
-		second = second + RunTestOnImage(encoder, i, qul);
+		second = second + RunTestOnImage(encoder, i, qul, buffer, height, width);
 	}
-	return second;
+	return second/20;
 }

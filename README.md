@@ -8,17 +8,69 @@
 - `libjpeg-turbo`
 
 	`libjpeg-turbo` 是 `libjpeg` 的复刻， 且通过 SIMD 指令加速了 jpeg 的压缩和加压缩过程。
--
-## 结果
+## 测试
 ### 测试环境
 - CPU : Intel i5-4590(4) @ 3.700GHz
-- OS : Arch Linux X86_64
-- 测试中所使用的图片是 opencv 项目中 example 的 jpeg 图片，数量 60。
+
+- OS : win10
+
+- IDE: Visual studio 2017
+
+- opencv(4.5.1-release), libjpeg-turbo(2.1.0)
+
+- 测试图片
+
+  ```shell
+  分辨率：8192*5000
+  位深度：24
+  格式：Bmp
+  大小：117MB
+  ```
+### 相关变量
+
+- 执行时间 $time$
+  在执行体前后分辨执行`clock()`函数，得到 开始时间 $t_1$ 和 结束时间 $t_2$ 。执行体只包含压缩过程，不包含文件读写。
+  $$
+  time  = (t_2-t_1)/ CLOCKS\_PER\_SEC
+  $$
+
+- 吞吐量 $tp$
+  设图片读取进内存后所占的内存空间为$s$，压缩图片的执行时间为$t$，则$tp = \frac st$
+
+### 注意事项
+
+1. 根据观察，在测试刚开始时，压缩图片的执行时间会偏高，如下图所示，在同样的压缩算法和压缩质量下，需要执行一段时间后，压缩过程的执行时间会逐渐下降并趋于稳定，因此，测试数据的采集需要等程序执行一段时间后再开始，称为”预热“。
+
+   ![hot](C:\Users\Administrator\Desktop\raw2jpegTest\hot.png)
+
+2. opencv的debug版本和release版本性能差距太大，实际测试中使用release版本(release版本的吞吐量是debug版本的3倍左右)。
+
+### 结果
+
+- 吞吐量-压缩质量（不同算法下）
+
+  <img src="C:\Users\Administrator\Desktop\raw2jpegTest\tp.png" alt="tp" style="zoom:150%;" />
+
+  
+
+`opencv`加速效果不明显。`libjpeg-turbo`的效果明显好于opencv, 由于opencv内部使用的`libjpeg`进行压缩，而`libjpeg-turbo`是`libjpeg`的优化版本。
+
+对于`libjpeg-turbo`而言，具体几个点的值：
+
+| quality           | 20   | 30     | 40     | 50     | 60     | 70     | 80     | 90     |
+| ----------------- | ---- | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
+| 平均吞吐量（MB/s) | 600  | 599.69 | 591.21 | 588.98 | 582.96 | 566.86 | 543.30 | 501.50 |
 
 
-#### 吞吐量随压缩质量的变化
-![avatar](./tp.png)
-随着压缩质量的增大，三者的吞吐量都降低， opencv 加速效果不明显，甚至在某些情况下吞吐量小于未加速的。`libjpeg-turbo`的表现最好。
-#### CPU 使用率
-![avatar](./cpu.png)
-通过结果可知， 加速过后的`open_cv` 的 cpu 使用率比未加速时的更高。三者的 cpu 使用率均集中在 60%~70%，单核使用率集中在 15%~17.5%
+
+* CPU 使用率
+
+​	观测方式：不断对图片进行压缩操作，使用资源管理器观测60秒的平均CPU使用率，待CPU使用率稳定后，记录当前的平均CPU使用率。
+
+|           | opencv | accelated opencv | libjpeg-turbo |
+| --------- | ------ | ---------------- | ------------- |
+| cpu使用率 | 24.47% | 24.55%           | 24.36%        |
+
+三者的cpu使用率没有太大区别。
+
+
