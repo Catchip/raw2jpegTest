@@ -47,20 +47,20 @@
 
 - 执行时间-压缩质量（不写入文件）
 
-  <img src="C:\Users\Administrator\Desktop\raw2jpegTest\time.png" alt="time" style="zoom:150%;" />
+  <img src="time.png" alt="time" style="zoom:150%;" />
   
 - 执行时间-压缩质量（写入文件）
 
-<img src="C:\Users\Administrator\Desktop\raw2jpegTest\time_w.png" alt="time" style="zoom:150%;" />
+<img src="time_w.png" alt="time" style="zoom:150%;" />
 
 - 吞吐量-压缩质量（不写入文件）
 
-  <img src="C:\Users\Administrator\Desktop\raw2jpegTest\tp.png" alt="tp" style="zoom:150%;" />
+  <img src="tp.png" alt="tp" style="zoom:150%;" />
 
 
 - 吞吐量-压缩质量（写入文件）
 
-  <img src="C:\Users\Administrator\Desktop\raw2jpegTest\tp_w.png" alt="tp" style="zoom:150%;" />
+  <img src="tp_w.png" alt="tp" style="zoom:150%;" />
 
 `opencv`加速效果不明显。`libjpeg-turbo`的效果明显好于opencv, 由于opencv内部使用的`libjpeg`进行压缩，而`libjpeg-turbo`是`libjpeg`的优化版本。
 
@@ -68,7 +68,7 @@
 
 写入图片和不写入图片所用时间的比值  随质量的变换如下图所示。
 
-![time_com](C:\Users\Administrator\Desktop\raw2jpegTest\time_com.png)
+![time_com](time_com.png)
 
 对于`libjpeg-turbo`而言，写入图片平均多使用`9%`的时间。而对于`opencv`而言，写入图片和不写入图片所花时间相近，这表明`imencode`方法和`imwrite`方法的速度相近。
 
