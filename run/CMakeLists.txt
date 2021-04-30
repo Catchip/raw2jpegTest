@@ -8,7 +8,7 @@ target_link_libraries(test encoder)
 target_link_libraries(test opencv_world451)
 
 set(Images images)
-set(opencvdll ${PROJECT_SOURCE_DIR}/3rdparty/opencv/win-x86_64/bin/opencv_world451.dll)
+set(opencvdll ${PROJECT_SOURCE_DIR}/3rdparty/opencv/win-x86_64/bin/opencv_world451d.dll)
 set(turbodll ${PROJECT_SOURCE_DIR}/3rdparty/libjpeg-turbo64/bin/jpeg62.dll ${PROJECT_SOURCE_DIR}/3rdparty/libjpeg-turbo64/bin/turbojpeg.dll)
 file(COPY ${Images} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ${opencvdll} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

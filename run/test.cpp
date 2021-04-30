@@ -44,9 +44,9 @@ int main(int argc, char *argv[]){
 	else if(strcmp(encoderName, "libjpeg") == 0)
 		index = 2;
 */
-	int index = 1;
+	int index = 0;
 	int loop = 1;
-	char * encoderName = "turbo";
+	char * encoderName = "opencv_acc";
 	int test = 2;
 	std::uint8_t * buffer;
 	std::vector<jpeg_encoder *> encoders;
@@ -119,10 +119,10 @@ double RunTestOnImage(jpeg_encoder *encoder, int img_num, int qua, uchar* buffer
 
 double RunTestOnImages(jpeg_encoder *encoder, int qul, uchar* buffer , int height, int width){
 	
-	int img_num = 20;
+	int img_num = 10;
 	double second = 0;
-	for(int i = 1 ; i < img_num ; ++i){
+	for(int i = 0 ; i < img_num ; ++i){
 		second = second + RunTestOnImage(encoder, i, qul, buffer, height, width);
 	}
-	return second/20;
+	return second/10;
 }

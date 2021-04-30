@@ -10,6 +10,7 @@ double TurboEncoder::encode(char *strImageName, std::uint8_t *image_buffer, int 
     
     struct jpeg_error_mgr jerr;
     /* More stuff */
+	FILE * outfile;
     JSAMPROW row_pointer[1];    /* pointer to JSAMPLE row[s] */
     int row_stride;     /* physical row width in image buffer */
     
@@ -19,6 +20,10 @@ double TurboEncoder::encode(char *strImageName, std::uint8_t *image_buffer, int 
 	unsigned long size = 0;
 	unsigned char * buf = NULL;
 	jpeg_mem_dest(&cinfo,&buf,&size);
+	if ((outfile = fopen(strImageName, "wb+")) == NULL) {
+		fprintf(stderr, "can't open");
+		return -1;
+	}
     //jpeg_stdio_dest(&cinfo, outfile);
 
   
@@ -49,6 +54,7 @@ double TurboEncoder::encode(char *strImageName, std::uint8_t *image_buffer, int 
     /* Step 6: Finish compression */
     jpeg_finish_compress(&cinfo);
     /* After finish_compress, we can close the output file. */
+	fclose(outfile);
 
     /* Step 7: release JPEG compression object */
     /* This is an important step since it will release a good deal of memory. */

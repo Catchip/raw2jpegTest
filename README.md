@@ -29,7 +29,7 @@
 ### 相关变量
 
 - 执行时间 $time$
-  在执行体前后分辨执行`clock()`函数，得到 开始时间 $t_1$ 和 结束时间 $t_2$ 。执行体只包含压缩过程，不包含文件读写。
+  在执行体前后分辨执行`clock()`函数，得到 开始时间 $t_1$ 和 结束时间 $t_2$ 。
   $$
   time  = (t_2-t_1)/ CLOCKS\_PER\_SEC
   $$
@@ -39,21 +39,40 @@
 
 ### 注意事项
 
-1. 根据观察，在测试刚开始时，压缩图片的执行时间会偏高，如下图所示，在同样的压缩算法和压缩质量下，需要执行一段时间后，压缩过程的执行时间会逐渐下降并趋于稳定，因此，测试数据的采集需要等程序执行一段时间后再开始，称为”预热“。
-
-   ![hot](C:\Users\Administrator\Desktop\raw2jpegTest\hot.png)
+1. 相关变量随压缩进行趋于稳定。
 
 2. opencv的debug版本和release版本性能差距太大，实际测试中使用release版本(release版本的吞吐量是debug版本的3倍左右)。
 
 ### 结果
 
-- 吞吐量-压缩质量（不同算法下）
+- 执行时间-压缩质量（不写入文件）
+
+  <img src="C:\Users\Administrator\Desktop\raw2jpegTest\time.png" alt="time" style="zoom:150%;" />
+  
+- 执行时间-压缩质量（写入文件）
+
+<img src="C:\Users\Administrator\Desktop\raw2jpegTest\time_w.png" alt="time" style="zoom:150%;" />
+
+- 吞吐量-压缩质量（不写入文件）
 
   <img src="C:\Users\Administrator\Desktop\raw2jpegTest\tp.png" alt="tp" style="zoom:150%;" />
 
-  
+
+- 吞吐量-压缩质量（写入文件）
+
+  <img src="C:\Users\Administrator\Desktop\raw2jpegTest\tp_w.png" alt="tp" style="zoom:150%;" />
 
 `opencv`加速效果不明显。`libjpeg-turbo`的效果明显好于opencv, 由于opencv内部使用的`libjpeg`进行压缩，而`libjpeg-turbo`是`libjpeg`的优化版本。
+
+
+
+写入图片和不写入图片所用时间的比值  随质量的变换如下图所示。
+
+![time_com](C:\Users\Administrator\Desktop\raw2jpegTest\time_com.png)
+
+对于`libjpeg-turbo`而言，写入图片平均多使用`9%`的时间。而对于`opencv`而言，写入图片和不写入图片所花时间相近，这表明`imencode`方法和`imwrite`方法的速度相近。
+
+
 
 对于`libjpeg-turbo`而言，具体几个点的值：
 

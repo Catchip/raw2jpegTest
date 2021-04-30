@@ -36,7 +36,7 @@ elseif(WIN32)
 	target_include_directories(encoder PUBLIC ${PROJECT_SOURCE_DIR}/3rdparty/libjpeg-turbo64/include)
 
 	target_link_libraries(encoder
-	opencv_world451
+	opencv_world451d
 	turbojpeg
 	jpeg
  	)
